@@ -1,3 +1,4 @@
+    
 from selenium import webdriver
 from bs4 import BeautifulSoup 
 import time 
@@ -9,31 +10,31 @@ browser.get(start_url)
 time.sleep(10)
 
 def scrape():
-    headers = ['Name','Distance', 'Mass','Radius']
-    star_factors  = []
+    headers = []
+    '''
+    name = []
+    distance = []
+    mass = []
+    radius = []
+    luminosity = []
+    '''
+    soup = BeautifulSoup(browser.page_source, 'html.parser')
     for i in range(0,452):
-        soupbrowser = BeautifulSoup(browser.page_source, 'html.parser')
-        for th_tags in soupbrowser.find_all('th',attrs={'class', 'headerSort'}):
-            td_tag = th_tags.find_all('td')
-            temp_list = []
-            for tr in star_factors: 
-                td = tr.find_all('td') 
-                row = [i.text.rstrip() 
-                for i in td] 
-                temp_list.append(row)
-            for index,td_tags in enumerate(td_tag):
-                if index == 0:
-                    temp_list.append(td_tags.find_all('a')[0].contents[0])
-                else:
-                    try:
-                        temp_list.append(td_tags.contents[0])
-                    except:
-                        temp_list.append('')
-            star_factors.append(temp_list)
-        browser.find_element_by_xpath('//*[@id="mw-content-text"]/div[1]/table').click()
-    with open('scraper3.csv','w') as f:
+        
+        star_table = soup.find('table')
+        temp_list = []
+        #table_rows = []
+        headers = soup.find_all('th')
+        for tr in star_table: 
+            td = soup.find_all('td') 
+            row = [i.text.rstrip() 
+            for i in td] 
+            temp_list.append(row)
+        print(temp_list)
+    with open('webscrapeRESULT.csv','w') as f:
         csvWriter = csv.writer(f)
-        csvWriter.writerow(headers)
-        csvWriter.writerows(star_factors)
-            
+        csvWriter.writerows(headers)
+        csvWriter.writerow(temp_list)
+      
 scrape()
+
